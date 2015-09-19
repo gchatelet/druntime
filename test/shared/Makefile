@@ -5,7 +5,7 @@ include ../common.mak
 TESTS:=link load linkD linkDR loadDR host finalize
 TESTS+=link_linkdep load_linkdep link_loaddep load_loaddep load_13414
 TESTS+=link_mod_collision load_mod_collision
-TESTS+=std_cpp_test
+TESTS+=cpp_string_test
 
 .PHONY: all clean
 all: $(addprefix $(ROOT)/,$(addsuffix .done,$(TESTS)))
@@ -63,11 +63,11 @@ $(ROOT)/load_mod_collision: $(ROOT)/%: $(SRC)/%.d $(ROOT)/lib.so $(DRUNTIMESO)
 #	use export dynamic so that Module in exe can interposes Module in lib.so
 	$(QUIET)$(DMD) $(DFLAGS) -of$@ $< $(LINKDL) -L--export-dynamic
 
-$(ROOT)/std_cpp_test_lib.o: $(SRC)/std_cpp_test_lib.cpp
+$(ROOT)/cpp_string_test_lib.o: $(SRC)/cpp_string_test_lib.cpp
 	$(QUIET)$(CC) $(CFLAGS) -std=c++11 -c -o $@ $<
 
-$(ROOT)/std_cpp_test: $(ROOT)/%: $(SRC)/%.d $(DRUNTIMESO) $(ROOT)/std_cpp_test_lib.o
-	$(DMD) $(DFLAGS) -of$@ $< $(ROOT)/std_cpp_test_lib.o -L/lib/libstdc++.a
+$(ROOT)/cpp_string_test: $(ROOT)/%: $(SRC)/%.d $(DRUNTIMESO) $(ROOT)/cpp_string_test_lib.o
+	$(DMD) $(DFLAGS) -of$@ $< $(ROOT)/cpp_string_test_lib.o -L/lib/libstdc++.a
 
 $(ROOT)/liblinkdep.so: $(ROOT)/lib.so
 $(ROOT)/liblinkdep.so: DFLAGS+=-L$(ROOT)/lib.so
